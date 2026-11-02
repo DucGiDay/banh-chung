@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "banh-chung",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5519", "--bind", "127.0.0.1", "--directory", "deploy"],
+      "port": 5519
+    }
+  ]
+}

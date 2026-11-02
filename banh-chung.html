@@ -1,0 +1,597 @@
+<title>Gói bánh chưng</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Tự tay gói một chiếc bánh chưng: lót lá, đổ gạo, rải đậu, đặt thịt, gấp lá, buộc lạt, rồi xem bánh vuông được bao nhiêu phần trăm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sân khấu dọc 9:16 (mặt chiếu tre nhìn từ trên xuống) bên trái, bảng luật chơi bên phải; dưới 900px xếp chồng.
+   Một giao diện cố định: nền sơn mài đỏ, chữ ngà, điểm vàng; không đổi theo theme. */
+:root{
+  --lacquer:#5a1013; --lacquer-2:#6d1a1c; --ivory:#f5ead6; --muted:#d8bfa4; --gold:#e8b44a; --line:rgba(245,234,214,.16);
+  --leaf:#2f7a32; --leaf-2:#3f923d; --leaf-deep:#1f5523; --rice:#fbf8ef; --bean:#f2c94c; --meat:#d98b7a; --lat:#d9c08a;
+  --ok:#4caf50; --mid:#e8b44a; --bad:#e2574c;
+  --f-display:"Playfair Display", Georgia, "Times New Roman", serif;
+  --f-body:"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+html,body{background:var(--lacquer);color:var(--ivory)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:16px 40px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.top{max-width:1120px;margin:0 auto 16px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:6px 24px}
+.top h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,3.8vw,38px);line-height:1;margin:0;text-wrap:balance}
+.top h1 em{font-style:italic;font-weight:700;color:var(--gold)}
+.top .sub{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.top .how{margin:0;color:var(--muted);font-size:13.5px;max-width:44ch}
+.wrap{--stage-w:max(300px, calc((100vh - 120px) * .5625));--stage-w:max(300px, calc((100dvh - 120px) * .5625));
+  max-width:1120px;margin:0 auto;display:grid;grid-template-columns:var(--stage-w) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:899px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.stage-col{min-width:0;justify-self:center;width:min(100%, var(--stage-w))}
+
+/* ---------- Sân khấu ---------- */
+.stage{position:relative;aspect-ratio:9/16;width:100%;container-type:inline-size;overflow:hidden;border-radius:22px;isolation:isolate;
+  background:
+    radial-gradient(120% 70% at 50% 45%, rgba(255,240,210,.35), rgba(255,240,210,0) 70%),
+    repeating-linear-gradient(0deg, rgba(120,80,30,.16) 0 .35cqw, rgba(120,80,30,0) .35cqw 3.2cqw),
+    repeating-linear-gradient(90deg, #d9b97f 0 3cqw, #cba66a 3cqw 3.4cqw);
+  box-shadow:0 0 0 1px var(--line), 0 30px 80px -30px rgba(0,0,0,.6);
+  user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;color:#2b1a10}
+.layer{position:absolute;inset:0}
+.abs{position:absolute}
+.stage button{background:none;border:0;padding:0;cursor:pointer}
+#peach{left:82%;top:76%;width:30cqw;pointer-events:none;opacity:.95}
+#peach svg{display:block;width:100%;height:auto;transform:scale(-1,-1)}
+
+#khuon{left:50%;top:50%;width:54cqw;aspect-ratio:1;border:3.2cqw solid #8a5a2b;border-radius:1cqw;box-sizing:border-box;
+  box-shadow:inset 0 0 0 .5cqw #6b4019, 0 1.4cqw 2cqw rgba(60,30,10,.35);
+  background:repeating-linear-gradient(90deg, rgba(0,0,0,.05) 0 3cqw, rgba(0,0,0,0) 3cqw 6cqw)}
+#pack{left:50%;top:50%;width:46cqw;aspect-ratio:1}
+#pack .fill{position:absolute;inset:0}
+.leafy{background:
+  repeating-linear-gradient(var(--vein,90deg), rgba(255,255,255,.08) 0 .3cqw, rgba(255,255,255,0) .3cqw 2.6cqw),
+  linear-gradient(var(--vein,90deg), var(--leaf-2), var(--leaf) 60%, var(--leaf-deep))}
+#leafBase{--vein:0deg}
+#rice1,#rice2{inset:5%;border-radius:.6cqw;
+  background:radial-gradient(circle at 30% 30%, rgba(0,0,0,.05) 0 .5cqw, rgba(0,0,0,0) .6cqw) 0 0/3cqw 3cqw, var(--rice)}
+#rice2{inset:4%}
+#bean1{inset:20%;border-radius:2cqw;background:radial-gradient(circle, rgba(170,120,10,.25) 0 .5cqw, rgba(0,0,0,0) .6cqw) 0 0/2.4cqw 2.4cqw, var(--bean)}
+#meat{left:50%;top:50%;width:24cqw;height:13cqw;border-radius:1.4cqw;
+  background:linear-gradient(180deg, #f3d9cf 0 22%, #c96f5f 22% 48%, #f3d9cf 48% 60%, #b85a4b 60% 100%);box-shadow:0 .6cqw 1cqw rgba(80,30,20,.3)}
+.flap{position:absolute;box-shadow:0 .4cqw 1cqw rgba(30,50,20,.3)}
+#fT{left:0;bottom:100%;width:100%;height:52%;--vein:0deg;border-radius:1cqw 1cqw 0 0}
+#fB{left:0;top:100%;width:100%;height:52%;--vein:0deg;border-radius:0 0 1cqw 1cqw}
+#fL{right:100%;top:0;width:52%;height:100%;--vein:90deg;border-radius:1cqw 0 0 1cqw}
+#fR{left:100%;top:0;width:52%;height:100%;--vein:90deg;border-radius:0 1cqw 1cqw 0}
+.lat{position:absolute;z-index:10;background:linear-gradient(90deg, #b99a5c, var(--lat) 30%, #efdcae 50%, var(--lat) 70%, #b99a5c);box-shadow:0 .3cqw .6cqw rgba(60,40,10,.35)}
+.lat.v{top:-4%;height:108%;width:3.6%}
+.lat.h{left:-4%;width:108%;height:3.6%;background:linear-gradient(180deg, #b99a5c, var(--lat) 30%, #efdcae 50%, var(--lat) 70%, #b99a5c)}
+#l1{left:30%} #l2{left:66.4%} #l3{top:30%} #l4{top:66.4%}
+
+#bowl{left:86%;top:27%;width:26cqw;touch-action:none;filter:drop-shadow(0 1.2cqw 1.4cqw rgba(60,30,10,.35))}
+#bowl svg{display:block;width:100%;height:auto}
+#meatSwing{left:50%;top:22%;width:24cqw;height:13cqw;border-radius:1.4cqw;pointer-events:none;
+  background:linear-gradient(180deg, #f3d9cf 0 22%, #c96f5f 22% 48%, #f3d9cf 48% 60%, #b85a4b 60% 100%);box-shadow:0 1.6cqw 2cqw rgba(80,30,20,.3)}
+.grain{position:absolute;width:1.3cqw;height:.8cqw;border-radius:50%;pointer-events:none}
+
+#gauge{left:50%;top:13.5%;width:76cqw;display:grid;gap:1.4cqw;padding:2.2cqw 3cqw 2.6cqw;border-radius:3cqw;
+  background:rgba(43,26,16,.82);color:var(--ivory)}
+#gaugeLabel{font-size:3cqw;font-weight:600;display:flex;justify-content:space-between;gap:2cqw;white-space:nowrap}
+#gaugeLabel b{color:var(--gold)}
+.track{position:relative;height:3.4cqw;border-radius:99px;background:rgba(245,234,214,.18);overflow:hidden}
+#zone{position:absolute;top:0;bottom:0;background:rgba(76,175,80,.55)}
+#fill{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--ivory);transform-origin:0 50%;transform:scaleX(0);opacity:.9}
+#needle{position:absolute;left:0;top:-10%;bottom:-10%;width:1.2cqw;margin-left:-.6cqw;border-radius:99px;background:var(--gold);box-shadow:0 0 0 .4cqw rgba(43,26,16,.6)}
+
+#act{left:50%;top:83%;min-width:46cqw;padding:3cqw 6cqw!important;border-radius:99px;font-weight:700;font-size:4.2cqw;
+  background:#b3261e!important;color:#fff!important;box-shadow:0 1.2cqw 0 #7d1913, 0 2cqw 3cqw rgba(60,10,10,.3);touch-action:none;white-space:nowrap}
+#act:active{transform:translateY(.6cqw)}
+#pop{left:50%;top:50%;font-family:var(--f-display);font-weight:900;font-size:7cqw;white-space:nowrap;pointer-events:none;
+  color:#fff;text-shadow:0 .5cqw 1.4cqw rgba(0,0,0,.45)}
+
+#result{left:50%;top:31%;width:86cqw;text-align:center;padding:5cqw 5cqw 4.6cqw;border-radius:3cqw;
+  background:#fff8ec;color:#2b1a10;box-shadow:0 3cqw 8cqw rgba(60,20,10,.35), inset 0 0 0 .6cqw #e8b44a}
+#result .eyebrow{margin:0;font-size:2.8cqw;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#b3261e}
+#score{font-family:var(--f-display);font-weight:900;font-size:17cqw;line-height:1;margin:1cqw 0 0;font-variant-numeric:tabular-nums}
+#verdict{font-family:var(--f-display);font-style:italic;font-weight:700;font-size:5cqw;margin:1cqw 0 3cqw}
+.breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6cqw 4cqw;text-align:left;margin:0 0 4cqw}
+.bd{display:grid;gap:.8cqw;font-size:2.9cqw}
+.bd span{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.bd i{display:block;height:1.2cqw;border-radius:99px;background:#eadfcb;overflow:hidden}
+.bd i b{display:block;height:100%;border-radius:99px;transform-origin:0 50%}
+#result .row{display:flex;flex-wrap:wrap;justify-content:center;gap:2.4cqw}
+.pill{border-radius:99px;font-weight:700;font-size:3.4cqw;padding:2.8cqw 5cqw!important;white-space:nowrap}
+.pill.red{background:#b3261e!important;color:#fff!important}
+.pill.soft{background:#fff!important;color:#7d1913!important;box-shadow:inset 0 0 0 1.5px #b3261e}
+#greet{left:50%;top:86.5%;font-family:var(--f-display);font-style:italic;font-weight:700;font-size:4.4cqw;color:#7d1913;white-space:nowrap;pointer-events:none}
+
+#fx{pointer-events:none}
+.spark{position:absolute;width:2.4cqw;aspect-ratio:1;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
+.hud-step{position:absolute;left:4.5cqw;top:4cqw;display:grid;gap:.6cqw;pointer-events:none}
+#stepNum{font-size:2.7cqw;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#b3261e}
+#stepName{font-family:var(--f-display);font-weight:900;font-size:4.6cqw;line-height:1.05;color:#2b1a10}
+.hud-restart{position:absolute!important;right:4cqw;top:4cqw;font-size:3cqw;font-weight:600;padding:2.4cqw 4cqw!important;
+  border-radius:99px;background:rgba(255,248,236,.85)!important;color:#2b1a10;box-shadow:inset 0 0 0 1px rgba(43,26,16,.2)}
+#caption{left:50%;bottom:2.6%;margin:0;width:max-content;max-width:88cqw;text-align:center;pointer-events:none;
+  font-size:3.6cqw;font-weight:600;line-height:1.3;color:var(--ivory);padding:2.6cqw 4.8cqw;border-radius:4cqw;background:rgba(43,26,16,.85)}
+
+#peach{z-index:1} #khuon{z-index:2} #pack{z-index:3} #meatSwing{z-index:4} #bowl{z-index:5} #fx{z-index:6} #pop{z-index:7}
+#gauge{z-index:8} #result{z-index:9} #greet{z-index:9} #act{z-index:10} .hud-step,.hud-restart,#caption{z-index:11}
+
+/* ---------- Bảng bên cạnh ---------- */
+.side{min-width:0;display:grid;gap:18px}
+.panel{background:var(--lacquer-2);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:14px}
+.panel h2{font-family:var(--f-display);font-weight:900;font-size:23px;margin:0;line-height:1.15}
+.panel p{margin:0;color:var(--muted);font-size:14px}
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rules li{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:10px;align-items:baseline;font-size:14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.rules li:last-child{border-bottom:0;padding-bottom:0}
+.rules .n{font-family:var(--f-display);font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums}
+.rules .w{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ivory)}
+.rules small{display:block;color:var(--muted);font-size:12.5px}
+.best{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.best b{font-family:var(--f-display);font-weight:900;font-size:34px;color:var(--gold);font-variant-numeric:tabular-nums}
+.copy-note{font-size:12.5px;color:var(--muted)}
+</style>
+
+<header class="top">
+  <div>
+    <h1>Gói <em>bánh chưng</em></h1>
+    <p class="sub">Trò chơi 8 bước cho Tết Đinh Mùi · GSAP · trang tĩnh</p>
+  </div>
+  <p class="how">Lót lá, đổ gạo, rải đậu, đặt thịt, gấp lá, buộc lạt. Mỗi bước làm càng chuẩn thì bánh càng vuông.</p>
+</header>
+
+<main class="wrap">
+  <div class="stage-col">
+    <div class="stage" id="stage">
+      <div id="peach" class="abs" aria-hidden="true">
+        <svg viewBox="0 0 160 100">
+          <path d="M2 12 C40 20 70 30 96 52 C110 64 124 70 156 74" stroke="#5b3a24" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M60 30 C66 18 74 12 84 10" stroke="#5b3a24" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <g fill="#f4a3b4" stroke="#d9748a" stroke-width="1">
+            <g transform="translate(40 22)"><circle cx="0" cy="-6" r="5"/><circle cx="5.7" cy="-1.9" r="5"/><circle cx="3.5" cy="4.9" r="5"/><circle cx="-3.5" cy="4.9" r="5"/><circle cx="-5.7" cy="-1.9" r="5"/><circle r="2.6" fill="#c2185b" stroke="none"/></g>
+            <g transform="translate(84 10)"><circle cx="0" cy="-5" r="4.2"/><circle cx="4.8" cy="-1.6" r="4.2"/><circle cx="3" cy="4.1" r="4.2"/><circle cx="-3" cy="4.1" r="4.2"/><circle cx="-4.8" cy="-1.6" r="4.2"/><circle r="2.2" fill="#c2185b" stroke="none"/></g>
+            <g transform="translate(108 62)"><circle cx="0" cy="-6" r="5"/><circle cx="5.7" cy="-1.9" r="5"/><circle cx="3.5" cy="4.9" r="5"/><circle cx="-3.5" cy="4.9" r="5"/><circle cx="-5.7" cy="-1.9" r="5"/><circle r="2.6" fill="#c2185b" stroke="none"/></g>
+            <g transform="translate(140 74)"><circle cx="0" cy="-4" r="3.4"/><circle cx="3.8" cy="-1.3" r="3.4"/><circle cx="2.4" cy="3.3" r="3.4"/><circle cx="-2.4" cy="3.3" r="3.4"/><circle cx="-3.8" cy="-1.3" r="3.4"/></g>
+          </g>
+          <g fill="#7cb342"><ellipse cx="70" cy="40" rx="5" ry="2.2" transform="rotate(-30 70 40)"/><ellipse cx="124" cy="64" rx="5" ry="2.2" transform="rotate(20 124 64)"/></g>
+        </svg>
+      </div>
+      <div id="khuon" class="abs"></div>
+      <div id="pack" class="abs">
+        <div id="leafBase" class="fill leafy"></div>
+        <div id="rice1" class="fill"></div>
+        <div id="bean1" class="fill"></div>
+        <div id="meat" class="abs"></div>
+        <div id="rice2" class="fill"></div>
+        <div id="fT" class="flap leafy"></div>
+        <div id="fB" class="flap leafy"></div>
+        <div id="fL" class="flap leafy"></div>
+        <div id="fR" class="flap leafy"></div>
+        <div id="l1" class="lat v"></div><div id="l2" class="lat v"></div>
+        <div id="l3" class="lat h"></div><div id="l4" class="lat h"></div>
+      </div>
+      <div id="meatSwing" class="abs"></div>
+      <div id="bowl" class="abs" aria-hidden="true">
+        <svg viewBox="0 0 120 90">
+          <ellipse cx="60" cy="30" rx="54" ry="20" fill="#8a5a2b"/>
+          <ellipse id="bowlFill" cx="60" cy="30" rx="46" ry="15" fill="#fbf8ef"/>
+          <path d="M6 30 Q14 82 60 84 Q106 82 114 30" fill="#b07a3e" stroke="#6b4019" stroke-width="3"/>
+          <path d="M14 44 Q60 60 106 44 M18 58 Q60 74 102 58" stroke="#8a5a2b" stroke-width="2.4" fill="none"/>
+          <path d="M30 34 L36 80 M60 36 L60 84 M90 34 L84 80" stroke="#8a5a2b" stroke-width="2" opacity=".7"/>
+          <ellipse cx="60" cy="30" rx="54" ry="20" fill="none" stroke="#6b4019" stroke-width="3"/>
+        </svg>
+      </div>
+      <div id="fx" class="layer"></div>
+      <div id="pop" class="abs"></div>
+      <div id="gauge" class="abs" aria-live="polite">
+        <div id="gaugeLabel"><span id="gaugeName">Gạo nếp</span><b id="gaugeHint">Dừng ở vùng xanh</b></div>
+        <div class="track"><span id="zone"></span><span id="fill"></span><span id="needle"></span></div>
+      </div>
+      <div id="result" class="abs">
+        <p class="eyebrow">Độ vuông của bánh</p>
+        <p id="score">0%</p>
+        <p id="verdict"></p>
+        <div class="breakdown" id="breakdown"></div>
+        <div class="row">
+          <button class="pill soft" id="copyBtn">Chép kết quả</button>
+          <button class="pill red" id="again">Gói chiếc khác</button>
+        </div>
+      </div>
+      <p id="greet" class="abs">Chúc mừng năm mới · Tết Đinh Mùi</p>
+      <button id="act" class="abs">Lót lá</button>
+      <div class="hud-step"><span id="stepNum"></span><span id="stepName"></span></div>
+      <button id="restart" class="hud-restart">Từ đầu</button>
+      <p id="caption" class="abs" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <aside class="side">
+    <section class="panel">
+      <h2>Cách chấm điểm</h2>
+      <p>Mỗi bước cho điểm từ 0 đến 100%. Độ vuông cuối cùng là tổng có trọng số. Bánh lệch ở bước nào thì sẽ méo đúng kiểu đó.</p>
+      <ol class="rules">
+        <li><span class="n">1</span><span>Lót lá dong<small>Chạm 4 lần, không tính điểm.</small></span><span class="w">0</span></li>
+        <li><span class="n">2</span><span>Đổ gạo nếp<small>Nhấn giữ để đổ, thả tay khi vạch vào vùng xanh.</small></span><span class="w">15</span></li>
+        <li><span class="n">3</span><span>Rải đậu xanh<small>Như đổ gạo, nhưng vùng xanh hẹp hơn.</small></span><span class="w">10</span></li>
+        <li><span class="n">4</span><span>Đặt thịt<small>Miếng thịt đung đưa, chạm để thả đúng giữa khuôn.</small></span><span class="w">15</span></li>
+        <li><span class="n">5</span><span>Phủ gạo<small>Đổ lớp gạo trên cùng.</small></span><span class="w">15</span></li>
+        <li><span class="n">6</span><span>Gấp lá<small>4 lần bấm đúng nhịp, kim chạy nhanh dần.</small></span><span class="w">25</span></li>
+        <li><span class="n">7</span><span>Buộc lạt<small>4 sợi lạt, kim còn nhanh hơn.</small></span><span class="w">20</span></li>
+      </ol>
+    </section>
+    <section class="panel">
+      <div class="best"><h2>Kỷ lục của bạn</h2><b id="best">–</b></div>
+      <p class="copy-note">Lưu ngay trên trình duyệt này, không gửi đi đâu.</p>
+    </section>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const stage = $('#stage');
+  const W = () => stage.clientWidth, H = () => stage.clientHeight;
+  const cq = v => v * W() / 100;
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const STEPS = [
+    ['leaf', 'Lót lá dong'], ['rice1', 'Đổ gạo nếp'], ['bean', 'Rải đậu xanh'], ['meat', 'Đặt thịt'],
+    ['rice2', 'Phủ gạo'], ['fold', 'Gấp lá'], ['tie', 'Buộc lạt'], ['score', 'Chấm điểm']
+  ];
+  const WEIGHTS = { rice1: 15, bean: 10, meat: 15, rice2: 15, fold: 25, tie: 20 };
+  const LABELS = { rice1: 'Gạo nếp', bean: 'Đậu xanh', meat: 'Thịt', rice2: 'Phủ gạo', fold: 'Gấp lá', tie: 'Buộc lạt' };
+  // Đổ: lượng 0..MAX, vùng xanh quanh TARGET
+  const POUR = {
+    rice1: { name: 'Gạo nếp', target: .8, half: .08, color: '#fbf8ef', layer: '#rice1', rate: .34 },
+    bean: { name: 'Đậu xanh', target: .7, half: .06, color: '#f2c94c', layer: '#bean1', rate: .3 },
+    rice2: { name: 'Phủ gạo', target: .8, half: .07, color: '#fbf8ef', layer: '#rice2', rate: .36 }
+  };
+  const MAX = 1.15;
+  const FLAPS = [['#fT', 'scaleY'], ['#fB', 'scaleY'], ['#fL', 'scaleX'], ['#fR', 'scaleX']];
+  const FOLD_SPEED = [1.25, 1.1, .98, .88];
+  const TIE_SPEED = [.92, .82, .74, .66];
+
+  let state = 'busy', stepIdx = 0, scores = {}, taps = [], leafN = 0;
+  let amount = 0, pouring = false, lastGrain = 0, pourKey = null;
+  let loops = {};
+  const loop = (name, t) => { loops[name] && loops[name].kill(); loops[name] = t; return t; };
+  const killLoop = name => { loops[name] && loops[name].kill(); delete loops[name]; };
+
+  function setStep(i) { stepIdx = i; $('#stepNum').textContent = `Bước ${i + 1}/8`; $('#stepName').textContent = STEPS[i][1]; }
+  function caption(text) {
+    const c = $('#caption');
+    gsap.timeline()
+      .to(c, { autoAlpha: 0, y: cq(1.5), duration: .15 })
+      .add(() => { c.textContent = text; })
+      .to(c, { autoAlpha: 1, y: 0, duration: .3, ease: 'power2.out' });
+  }
+  function setAct(label, show = true) {
+    const a = $('#act');
+    a.textContent = label;
+    gsap.to(a, { autoAlpha: show ? 1 : 0, duration: .25 });
+  }
+  function pctOf(el) {
+    const r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+    return { x: (r.left + r.width / 2 - s.left) / s.width * 100, y: (r.top + r.height / 2 - s.top) / s.height * 100 };
+  }
+  function burst(xp, yp, n, colors) {
+    const fx = $('#fx');
+    const count = reduce ? Math.ceil(n / 3) : n;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('i');
+      s.className = 'spark'; s.style.background = pick(colors);
+      fx.append(s);
+      const a = rand(0, Math.PI * 2), d = cq(rand(8, 30));
+      gsap.set(s, { left: xp + '%', top: yp + '%', xPercent: -50, yPercent: -50, scale: rand(.5, 1.3), rotation: rand(0, 90) });
+      gsap.to(s, { x: Math.cos(a) * d, y: Math.sin(a) * d - cq(5), scale: 0, rotation: '+=180', duration: rand(.7, 1.2), ease: 'power3.out', onComplete: () => s.remove() });
+    }
+  }
+  function feedback(acc) {
+    const [txt, col] = acc >= .85 ? ['Chuẩn!', '#4caf50'] : acc >= .6 ? ['Ổn', '#e8b44a'] : ['Lệch rồi', '#e2574c'];
+    const p = $('#pop');
+    p.textContent = txt; p.style.color = col;
+    gsap.fromTo(p, { autoAlpha: 1, y: 0, scale: .6 }, { scale: 1, y: -cq(10), duration: .5, ease: 'back.out(2.5)' });
+    gsap.to(p, { autoAlpha: 0, duration: .3, delay: .7 });
+    if (acc >= .85) burst(50, 50, 14, ['#e8b44a', '#fff3c0', '#4caf50']);
+  }
+
+  /* ---------- Thước đo ---------- */
+  function gaugeShow(name, hint) { $('#gaugeName').textContent = name; $('#gaugeHint').textContent = hint; gsap.to('#gauge', { autoAlpha: 1, duration: .3 }); }
+  function gaugeHide() { gsap.to('#gauge', { autoAlpha: 0, duration: .3 }); }
+  function setZone(from, to) { gsap.set('#zone', { left: from * 100 + '%', width: (to - from) * 100 + '%' }); }
+  function trackW() { return $('.track').clientWidth; }
+
+  /* ---------- Đặt lại ---------- */
+  function resetAll() {
+    stopPour();
+    gsap.globalTimeline.getChildren(true, true, true).forEach(t => t.kill());
+    loops = {};
+    $('#fx').replaceChildren();
+    scores = {}; taps = []; leafN = 0; amount = 0;
+    gsap.set('.abs', { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: 1, rotation: 0, skewX: 0, scaleX: 1, scaleY: 1, autoAlpha: 1 });
+    gsap.set(['#bowl', '#meatSwing', '#gauge', '#result', '#greet', '#pop', '#caption', '#meat'], { autoAlpha: 0 });
+    gsap.set('#pack', { borderRadius: 0, overflow: 'visible' });
+    gsap.set(['#leafBase', '#rice1', '#bean1', '#rice2'], { autoAlpha: 0, scale: 1 });
+    FLAPS.forEach(([s, prop]) => gsap.set(s, { autoAlpha: 0, x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1, zIndex: 0 }));
+    gsap.set('#fT', { transformOrigin: '50% 100%' }); gsap.set('#fB', { transformOrigin: '50% 0%' });
+    gsap.set('#fL', { transformOrigin: '100% 50%' }); gsap.set('#fR', { transformOrigin: '0% 50%' });
+    gsap.set('.lat.v', { scaleY: 0, x: 0, rotation: 0, transformOrigin: '50% 0%' });
+    gsap.set('.lat.h', { scaleX: 0, y: 0, rotation: 0, transformOrigin: '0% 50%' });
+    gsap.set('#fill', { scaleX: 0 }); gsap.set('#needle', { x: 0, autoAlpha: 0 });
+    gsap.set('#bowl', { transformOrigin: '20% 40%' });
+    gsap.set('#khuon', { autoAlpha: 1 });
+  }
+
+  /* ---------- Bước 1: lót lá ---------- */
+  function stepLeaf() {
+    setStep(0); state = 'leaf'; leafN = 0;
+    caption('Chạm 4 lần để lót lá dong');
+    setAct('Lót lá (0/4)');
+  }
+  function leafTap() {
+    const [sel] = FLAPS[leafN];
+    leafN++;
+    if (leafN === 1) gsap.fromTo('#leafBase', { autoAlpha: 0, scale: .6 }, { autoAlpha: 1, scale: 1, duration: .5, ease: 'back.out(1.6)' });
+    const from = { '#fT': [0, -40], '#fB': [0, 40], '#fL': [-40, 0], '#fR': [40, 0] }[sel];
+    gsap.fromTo(sel, { autoAlpha: 0, x: cq(from[0]), y: cq(from[1]), rotation: rand(-25, 25) },
+      { autoAlpha: 1, x: 0, y: 0, rotation: 0, duration: .55, ease: 'back.out(1.5)' });
+    $('#act').textContent = `Lót lá (${leafN}/4)`;
+    if (leafN < 4) return;
+    state = 'busy';
+    caption('Lá đã lót xong');
+    gsap.delayedCall(.9, () => stepPour('rice1'));
+  }
+
+  /* ---------- Bước 2, 3, 5: đổ (nhấn giữ) ---------- */
+  function stepPour(key) {
+    const cfg = POUR[key];
+    pourKey = key; amount = 0;
+    setStep(key === 'rice1' ? 1 : key === 'bean' ? 2 : 4);
+    $('#bowlFill').setAttribute('fill', cfg.color);
+    setZone((cfg.target - cfg.half) / MAX, (cfg.target + cfg.half) / MAX);
+    gsap.set('#fill', { scaleX: 0 }); gsap.set('#needle', { autoAlpha: 0 }); gsap.set('#fill', { autoAlpha: 1 });
+    gaugeShow(cfg.name, 'Thả tay ở vùng xanh');
+    gsap.fromTo('#bowl', { autoAlpha: 1, x: cq(30), rotation: 0 }, { x: 0, duration: .6, ease: 'back.out(1.4)' });
+    caption(key === 'bean' ? 'Nhấn giữ nút để rải đậu' : 'Nhấn giữ nút để đổ gạo');
+    setAct('Giữ để đổ');
+    gsap.delayedCall(.5, () => { state = 'pour'; });
+  }
+  function startPour() {
+    if (state !== 'pour' || pouring) return;
+    pouring = true;
+    gsap.to('#bowl', { rotation: -38, duration: .25, ease: 'power2.out' });
+    gsap.ticker.add(pourTick);
+  }
+  function stopPour() {
+    if (!pouring) return;
+    pouring = false;
+    gsap.ticker.remove(pourTick);
+    gsap.to('#bowl', { rotation: 0, duration: .25 });
+  }
+  function spawnGrain(cfg, spill) {
+    const lip = pctOf($('#bowl'));
+    const g = document.createElement('i');
+    g.className = 'grain';
+    g.style.background = cfg.color;
+    g.style.boxShadow = '0 0 0 .15cqw rgba(120,80,30,.25)';
+    $('#fx').append(g);
+    const tx = spill ? pick([rand(16, 22), rand(78, 84)]) : rand(30, 70);
+    const ty = spill ? rand(30, 70) : rand(37, 63);
+    gsap.set(g, { left: (lip.x - 10) + '%', top: (lip.y - 2) + '%', rotation: rand(0, 180) });
+    gsap.to(g, { left: tx + '%', duration: .45, ease: 'power1.out' });
+    gsap.to(g, { top: ty + '%', duration: .45, ease: 'power2.in', onComplete: () => gsap.to(g, { autoAlpha: 0, duration: .4, delay: spill ? 1.2 : 0, onComplete: () => g.remove() }) });
+  }
+  function pourTick(time, dt) {
+    const cfg = POUR[pourKey];
+    amount = Math.min(MAX, amount + dt / 1000 * cfg.rate);
+    gsap.set('#fill', { scaleX: amount / MAX });
+    gsap.set(cfg.layer, { autoAlpha: clamp(amount / cfg.target, 0, 1), scale: .85 + .15 * clamp(amount / cfg.target, 0, 1) });
+    if (time - lastGrain > .03) { lastGrain = time; spawnGrain(cfg, amount > 1); }
+    if (amount >= MAX) { finishPour(); }
+  }
+  function finishPour() {
+    if (state !== 'pour') return;
+    stopPour();
+    if (amount < .35) { caption('Chưa đủ, giữ thêm chút nữa'); return; }
+    state = 'busy';
+    const cfg = POUR[pourKey];
+    const acc = clamp(1 - Math.abs(amount - cfg.target) / .35, 0, 1);
+    scores[pourKey] = acc;
+    feedback(acc);
+    if (amount > 1) caption('Hơi tràn rồi. Bánh sẽ bị phình');
+    else if (amount < cfg.target - cfg.half) caption('Hơi ít. Bánh sẽ bị lép');
+    else caption('Vừa đẹp!');
+    gsap.timeline({ delay: .8 })
+      .to('#bowl', { x: cq(30), autoAlpha: 0, duration: .5, ease: 'power2.in' })
+      .add(gaugeHide, '<')
+      .add(() => { if (pourKey === 'rice1') stepPour('bean'); else if (pourKey === 'bean') stepMeat(); else stepFold(); }, '+=.2');
+  }
+
+  /* ---------- Bước 4: đặt thịt ---------- */
+  function stepMeat() {
+    setStep(3);
+    gsap.fromTo('#meatSwing', { autoAlpha: 0, y: -cq(10) }, { autoAlpha: 1, y: 0, duration: .4 });
+    loop('swing', gsap.fromTo('#meatSwing', { x: -cq(26) }, { x: cq(26), duration: 1.05, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+    caption('Thả khi miếng thịt ở giữa khuôn');
+    setAct('Thả thịt');
+    gsap.delayedCall(.4, () => { state = 'meat'; });
+  }
+  function dropMeat() {
+    state = 'busy';
+    killLoop('swing');
+    const dx = gsap.getProperty('#meatSwing', 'x');
+    const acc = clamp(1 - Math.abs(dx) / cq(22), 0, 1);
+    scores.meat = acc;
+    const fall = $('#pack').getBoundingClientRect().top + $('#pack').clientHeight / 2 - $('#meatSwing').getBoundingClientRect().top - $('#meatSwing').clientHeight / 2;
+    gsap.set('#meatSwing', { autoAlpha: 0 });
+    gsap.timeline()
+      .fromTo('#meat', { autoAlpha: 1, x: dx, y: -fall, rotation: 0 }, { y: 0, rotation: (1 - acc) * (dx > 0 ? 8 : -8), duration: .5, ease: 'bounce.out' })
+      .add(() => { feedback(acc); caption(acc >= .85 ? 'Thịt nằm ngay giữa' : 'Thịt hơi lệch, bánh sẽ bị nghiêng'); })
+      .add(() => stepPour('rice2'), '+=1.1');
+  }
+
+  /* ---------- Bước 6–7: gấp lá, buộc lạt (bấm đúng nhịp) ---------- */
+  function startNeedle(speed, zoneHalf) {
+    setZone(.5 - zoneHalf, .5 + zoneHalf);
+    gsap.set('#fill', { autoAlpha: 0 });
+    gsap.set('#needle', { autoAlpha: 1 });
+    loop('needle', gsap.fromTo('#needle', { x: 0 }, { x: trackW(), duration: speed, ease: 'none', yoyo: true, repeat: -1 }));
+  }
+  function readNeedle() {
+    const pos = gsap.getProperty('#needle', 'x') / trackW();
+    return clamp(1 - Math.abs(pos - .5) / .5, 0, 1);
+  }
+  function stepFold() {
+    setStep(5); taps = [];
+    gaugeShow('Gấp lá', 'Bấm khi kim vào vùng xanh');
+    startNeedle(FOLD_SPEED[0], .1);
+    caption('Bấm khi kim ở giữa để gấp mép lá');
+    setAct('Gấp lá (0/4)');
+    gsap.delayedCall(.4, () => { state = 'fold'; });
+  }
+  function foldTap() {
+    const acc = readNeedle();
+    const i = taps.length;
+    taps.push(acc);
+    const [sel, prop] = FLAPS[i];
+    const err = (1 - acc) * (Math.random() < .5 ? -1 : 1);
+    gsap.set(sel, { zIndex: 5 + i });
+    gsap.to(sel, { [prop]: -1, rotation: err * 9, x: prop === 'scaleY' ? err * cq(2.5) : 0, y: prop === 'scaleX' ? err * cq(2.5) : 0, duration: .55, ease: 'power2.inOut' });
+    feedback(acc);
+    $('#act').textContent = `Gấp lá (${taps.length}/4)`;
+    if (taps.length < 4) { startNeedle(FOLD_SPEED[taps.length], .1); return; }
+    state = 'busy'; killLoop('needle');
+    scores.fold = taps.reduce((a, b) => a + b, 0) / 4;
+    caption('Lá đã gấp xong, giờ buộc lạt');
+    gsap.delayedCall(1, stepTie);
+  }
+  function stepTie() {
+    setStep(6); taps = [];
+    gaugeShow('Buộc lạt', 'Bấm khi kim vào vùng xanh');
+    startNeedle(TIE_SPEED[0], .09);
+    gsap.to('#khuon', { autoAlpha: .35, duration: .5 });
+    caption('Buộc lạt: kim chạy nhanh hơn rồi');
+    setAct('Buộc lạt (0/4)');
+    gsap.delayedCall(.4, () => { state = 'tie'; });
+  }
+  function tieTap() {
+    const acc = readNeedle();
+    const i = taps.length;
+    taps.push(acc);
+    const el = $('#l' + (i + 1));
+    const err = (1 - acc) * (Math.random() < .5 ? -1 : 1);
+    const vertical = el.classList.contains('v');
+    gsap.to(el, vertical
+      ? { scaleY: 1, x: err * cq(4), rotation: err * 7, duration: .45, ease: 'power2.out' }
+      : { scaleX: 1, y: err * cq(4), rotation: err * 7, duration: .45, ease: 'power2.out' });
+    gsap.to('#pack', { scaleX: vertical ? .97 : 1, scaleY: vertical ? 1 : .97, duration: .1, yoyo: true, repeat: 1 });
+    feedback(acc);
+    $('#act').textContent = `Buộc lạt (${taps.length}/4)`;
+    if (taps.length < 4) { startNeedle(TIE_SPEED[taps.length], .09); return; }
+    state = 'busy'; killLoop('needle');
+    scores.tie = taps.reduce((a, b) => a + b, 0) / 4;
+    gaugeHide();
+    setAct('', false);
+    caption('Xong! Để xem bánh vuông đến đâu…');
+    gsap.delayedCall(1, stepScore);
+  }
+
+  /* ---------- Bước 8: chấm điểm ---------- */
+  function verdictOf(s) {
+    if (s >= 90) return 'Vuông như khuôn đúc';
+    if (s >= 75) return 'Đẹp, mang biếu được rồi';
+    if (s >= 55) return 'Hơi méo, để nhà mình ăn';
+    return 'Bánh… hơi tròn';
+  }
+  function stepScore() {
+    setStep(7); state = 'busy';
+    const total = Math.round(Object.keys(WEIGHTS).reduce((sum, k) => sum + WEIGHTS[k] * (scores[k] ?? 0), 0));
+    const s = total / 100;
+    const pourErr = ((1 - (scores.rice1 ?? 0)) + (1 - (scores.rice2 ?? 0))) / 2;
+    $('#score').textContent = '0%';
+    $('#verdict').textContent = verdictOf(total);
+    $('#breakdown').replaceChildren(...Object.keys(WEIGHTS).map(k => {
+      const v = Math.round((scores[k] ?? 0) * 100);
+      const d = document.createElement('div'); d.className = 'bd';
+      const col = v >= 85 ? 'var(--ok)' : v >= 60 ? 'var(--mid)' : 'var(--bad)';
+      d.innerHTML = `<span><span>${LABELS[k]}</span><span>${v}%</span></span><i><b style="background:${col};transform:scaleX(${v / 100})"></b></i>`;
+      return d;
+    }));
+    let best = null;
+    try { best = Number(localStorage.getItem('banhchung-best')) || null; } catch (e) {}
+    const isBest = best === null || total > best;
+    if (isBest) { try { localStorage.setItem('banhchung-best', String(total)); } catch (e) {} best = total; }
+    $('#best').textContent = best + '%';
+
+    const counter = { v: 0 };
+    gsap.timeline()
+      .to('#khuon', { autoAlpha: 0, scale: 1.1, duration: .5 })
+      .set('#pack', { overflow: 'hidden' })
+      .to('#pack', {
+        top: '72%', scale: .78, duration: 1, ease: 'power2.inOut',
+        rotation: (1 - (scores.meat ?? 0)) * rand(-7, 7),
+        skewX: (1 - (scores.fold ?? 0)) * rand(-10, 10),
+        scaleX: .78 * (1 + pourErr * .14), scaleY: .78 * (1 - pourErr * .1),
+        borderRadius: (1 - s) * 30 + '%'
+      })
+      .fromTo('#result', { autoAlpha: 0, y: -cq(6), scale: .92 }, { autoAlpha: 1, y: 0, scale: 1, duration: .7, ease: 'back.out(1.5)' }, '-=.3')
+      .to(counter, { v: total, duration: 1.4, ease: 'power2.out', onUpdate: () => { $('#score').textContent = Math.round(counter.v) + '%'; } })
+      .from('.bd b', { scaleX: 0, duration: .6, stagger: .08 }, '<')
+      .fromTo('#greet', { autoAlpha: 0, y: cq(3) }, { autoAlpha: 1, y: 0, duration: .5 }, '-=.4')
+      .add(() => {
+        burst(50, 40, total >= 75 ? 40 : 16, ['#e8b44a', '#fff3c0', '#f4a3b4', '#b3261e']);
+        caption(isBest ? `Kỷ lục mới: ${total}%` : `Kỷ lục của bạn vẫn là ${best}%`);
+        state = 'done';
+        $('#result').dataset.score = total;
+      });
+  }
+
+  function restart() { resetAll(); stepLeaf(); }
+
+  /* ---------- Điều khiển ---------- */
+  const act = $('#act');
+  act.addEventListener('click', e => {
+    if (state === 'leaf') leafTap();
+    else if (state === 'meat') dropMeat();
+    else if (state === 'fold') foldTap();
+    else if (state === 'tie') tieTap();
+  });
+  act.addEventListener('pointerdown', e => {
+    if (state !== 'pour') return;
+    e.preventDefault();
+    try { act.setPointerCapture(e.pointerId); } catch (err) {}
+    startPour();
+  });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => act.addEventListener(t, () => { if (pouring) finishPour(); }));
+  act.addEventListener('keydown', e => {
+    if (state !== 'pour' || (e.key !== ' ' && e.key !== 'Enter')) return;
+    e.preventDefault();
+    if (!e.repeat) startPour();
+  });
+  act.addEventListener('keyup', e => { if ((e.key === ' ' || e.key === 'Enter') && pouring) finishPour(); });
+  act.addEventListener('contextmenu', e => e.preventDefault());
+
+  $('#restart').addEventListener('click', restart);
+  $('#again').addEventListener('click', restart);
+  $('#copyBtn').addEventListener('click', () => {
+    const total = $('#result').dataset.score || 0;
+    const text = `Mình vừa gói một chiếc bánh chưng vuông ${total}%: ${verdictOf(Number(total)).toLowerCase()}. Bạn thử gói xem có vuông hơn không? ${location.href.split('#')[0]}`;
+    const btn = $('#copyBtn');
+    const done = () => { btn.textContent = 'Đã chép'; gsap.delayedCall(1.8, () => { btn.textContent = 'Chép kết quả'; }); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => { btn.textContent = 'Không chép được'; });
+    else btn.textContent = 'Không chép được';
+  });
+
+  try { const b = localStorage.getItem('banhchung-best'); if (b) $('#best').textContent = b + '%'; } catch (e) {}
+  restart();
+})();
+</script>

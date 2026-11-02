@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "banh-chung/banh-chung.html"
+        ],
+        "createdAt": "2026-11-02T10:57:57.853Z",
+        "reason": "Claude: false positive, checker measured text against #ffffff but page chrome is dark lacquer red (#5a1013) with ivory text, and stage text sits on dark pills or ivory cards"
+      }
+    ]
+  }
+}
